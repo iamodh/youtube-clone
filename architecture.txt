@@ -1,0 +1,16 @@
+/
+/join
+/login
+/logout
+/search
+
+/users/:id
+/users/:id/edit
+/users/:id/change-password
+
+/videos/:id
+/videos/:id/edit
+/videos/:id/delete
+/videos/upload
+
+

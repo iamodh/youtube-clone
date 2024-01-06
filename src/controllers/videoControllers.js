@@ -1,5 +1,5 @@
 export const home = (req, res) => {
-  return res.send("<h1>This will be a home page</h1>");
+  return res.render("home", { pageTitle: "Home" });
 };
 export const search = (req, res) => {
   return res.send("<h1>This will be a search page</h1>");

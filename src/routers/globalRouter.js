@@ -1,6 +1,11 @@
 import express from "express";
-import { join, login, logout } from "../controllers/userControllers";
-import { home, search } from "../controllers/videoControllers";
+import {
+  join,
+  login,
+  logout,
+  home,
+  search,
+} from "../controllers/globalController";
 
 const rootRouter = express.Router();
 rootRouter.get("/", home);

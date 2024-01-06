@@ -1,6 +1,7 @@
 import express from "express";
 import {
-  join,
+  getJoin,
+  postJoin,
   login,
   logout,
   home,
@@ -9,7 +10,7 @@ import {
 
 const rootRouter = express.Router();
 rootRouter.get("/", home);
-rootRouter.get("/join", join);
+rootRouter.route("/join").get(getJoin).post(postJoin);
 rootRouter.get("/login", login);
 rootRouter.get("/logout", logout);
 rootRouter.get("/search", search);

@@ -1,10 +1,3 @@
-export const home = (req, res) => {
-  return res.render("home", { pageTitle: "Home" });
-};
-export const search = (req, res) => {
-  return res.send("<h1>This will be a search page</h1>");
-};
-
 export const videoUpload = (req, res) => {
   return res.send("<h1>This will be a video upload page</h1>");
 };

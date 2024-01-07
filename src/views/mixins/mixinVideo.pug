@@ -1,0 +1,16 @@
+mixin mixinVideo(video)
+    .videoBlock
+        a(href="#")
+            .videoBlock__thumbnail 
+            .videoBlock__content 
+                .videoBlock__image
+                .videoBlock__main
+                    h4.videoBlock__title #{video.title}
+                    h5 userName 
+                    .videoBlock__viewDate 
+                        if video.meta.views > 1
+                            h6.videoBlock__views #{video.meta.views} views 
+                        else
+                            h6.videoBlock__views #{video.meta.views} view 
+                        em •
+                        h6 #{new Date(video.createdAt).toLocaleDateString("ko-KR")}   

@@ -1,8 +1,6 @@
 extends ../layout
 
-block content 
-    if errorMessage
-        p=errorMessage
+block content
     form(method="POST") 
         input(name="email", placeholder="email", type="email", required)
         input(name="password", placeholder="password", type="password", required) 
@@ -10,3 +8,4 @@ block content
         input(name="name", placeholder="name", type="text", required)
         input(name="location", placeholder="location", type="text")
         input(type="submit", value="Join")
+    include ../components/errorMessage

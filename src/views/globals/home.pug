@@ -1,4 +1,13 @@
 extends ../layout
+include ../mixins/mixinVideo
 
-block content 
-    h3 This will be a home page!
+block content
+    .home-container 
+        .home-menu
+        .home-videos 
+            .home-videos.content
+                each video in videos
+                    +mixinVideo(video)
+                else 
+                    h1 Video not found.
+    

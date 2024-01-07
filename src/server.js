@@ -3,6 +3,7 @@ import "dotenv/config";
 // MongoDB
 import "./db";
 import "./models/User";
+import "./models/Video";
 
 // Dependencies
 import express from "express";

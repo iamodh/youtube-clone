@@ -1,0 +1,9 @@
+extends ../layout
+
+block content 
+    form(method="POST") 
+        input(name="title", placeholder="title", type="text", required, maxlength="20")
+        input(name="description", placeholder="description", type="text", maxLength="100") 
+        input(name="hashtags", placeholder="hashtags", type="text")
+        input(type="submit", value="Upload")
+    include ../components/errorMessage

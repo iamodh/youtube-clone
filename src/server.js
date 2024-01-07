@@ -5,9 +5,10 @@ import "./db";
 import "./models/User";
 
 // Dependencies
-import session from "express-session";
 import express from "express";
 import morgan from "morgan";
+import session from "express-session";
+import Mongostore from "connect-mongo";
 
 // Middlewares
 import { localsMiddleware } from "./middlewares";
@@ -29,7 +30,8 @@ app.use(
   session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: Mongostore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
 

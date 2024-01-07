@@ -7,9 +7,17 @@ nav.nav
         li.home-menu-item 
             a(href="http://localhost:4000/")
                 span 홈
-        li.home-menu-item 
-            a(href="http://localhost:4000/join")
-                span 회원가입
-        li.home-menu-item 
-            a(href="http://localhost:4000/login")
-                span 로그인
+        if isLoggedIn
+            li.home-menu-item 
+                a(href="#")
+                    span=loggedInUser.name
+            li.home-menu-item 
+                a(href="http://localhost:4000/logout")
+                    span 로그아웃
+        else
+            li.home-menu-item 
+                a(href="http://localhost:4000/join")
+                    span 회원가입
+            li.home-menu-item 
+                a(href="http://localhost:4000/login")
+                    span 로그인

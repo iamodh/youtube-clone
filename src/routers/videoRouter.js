@@ -16,6 +16,6 @@ videoRouter
   .route("/:id([0-9a-f]{24})/edit")
   .get(getVideoEdit)
   .post(postVideoEdit);
-videoRouter.get("/:id([0-9a-f]{24})/delete", videoDelete);
+videoRouter.route("/:id([0-9a-f]{24})/delete").delete(videoDelete);
 
 export default videoRouter;

@@ -67,6 +67,7 @@ export const postVideoEdit = async (req, res) => {
     if (!foundVideo) {
       return res.status(404).render("404", { pageTitle: "Video not found." });
     }
+    // owner check
     await Video.findByIdAndUpdate(id, {
       title,
       description,
@@ -79,6 +80,15 @@ export const postVideoEdit = async (req, res) => {
   }
 };
 
-export const videoDelete = (req, res) => {
-  return res.send("<h1>This will be a video delete page</h1>");
+export const videoDelete = async (req, res) => {
+  const {
+    body: { id },
+  } = req;
+  const foundVideo = await Video.findById(id);
+  if (!foundVideo) {
+    return res.status(404).render("404", { pageTitle: "Video not found." });
+  }
+  // owner check
+  await Video.findByIdAndDelete(id);
+  return res.redirect("/");
 };

@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 
 export const home = async (req, res) => {
   const videos = await Video.find({}).sort({ createdAt: "desc" });
-  console.log(videos);
   return res.render("globals/home", { pageTitle: "Home", videos });
 };
 

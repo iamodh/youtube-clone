@@ -1,6 +1,6 @@
 mixin mixinVideo(video)
     .videoBlock
-        a(href="#")
+        a(href=`/videos/${video._id}`)
             .videoBlock__thumbnail 
             .videoBlock__content 
                 .videoBlock__image

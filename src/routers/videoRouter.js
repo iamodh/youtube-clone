@@ -10,8 +10,8 @@ import {
 const videoRouter = express.Router();
 
 videoRouter.route("/upload").get(getVideoUpload).post(postVideoUpload);
-videoRouter.get("/:id", videoWatch);
-videoRouter.get("/:id/edit", videoEdit);
-videoRouter.get("/:id/delete", videoDelete);
+videoRouter.get("/:id([0-9a-f]{24})", videoWatch);
+videoRouter.get("/:id([0-9a-f]{24})/edit", videoEdit);
+videoRouter.get("/:id([0-9a-f]{24})/delete", videoDelete);
 
 export default videoRouter;

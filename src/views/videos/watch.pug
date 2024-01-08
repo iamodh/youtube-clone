@@ -2,3 +2,9 @@ extends ../layout
 
 block content 
   h2 Here you plays #{video.title}.
+  h3=video.description
+  ul
+    for hashtag in video.hashtags
+      li=hashtag
+  a(href=`/videos/${video.id}/edit`) Edit video &rarr; 
+  a(href=`/videos/${video.id}/delete`) Delete video &rarr; 

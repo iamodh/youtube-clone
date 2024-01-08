@@ -1,0 +1,9 @@
+extends ../layout
+
+block content 
+    form(method="POST") 
+        input(name="title", placeholder="title", type="text", required, maxlength="20", value=video.title)
+        input(name="description", placeholder="description", type="text", maxLength="100", value=video.description) 
+        input(name="hashtags", placeholder="hashtags", type="text", value=video.hashtags.join())
+        input(type="submit", value="Edit")
+    include ../components/errorMessage

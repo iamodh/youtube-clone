@@ -22,22 +22,63 @@ export const postVideoUpload = async (req, res) => {
 };
 
 export const videoWatch = async (req, res) => {
-  const {
-    params: { id },
-  } = req;
-  const foundVideo = await Video.findById(id);
-  if (!foundVideo) {
-    return res.status(404).render("404", { pageTitle: "Video not found." });
+  try {
+    const {
+      params: { id },
+    } = req;
+    const foundVideo = await Video.findById(id);
+    if (!foundVideo) {
+      return res.status(404).render("404", { pageTitle: "Video not found." });
+    }
+    return res.render("videos/watch", {
+      pageTitle: foundVideo.title,
+      video: foundVideo,
+    });
+  } catch (error) {
+    console.log("videoWatch controller error");
+    return res.status(404).render("404", { pageTitle: "Page not found." });
   }
-  return res.render("videos/watch", {
-    pageTitle: foundVideo.title,
-    video: foundVideo,
-  });
 };
 
-export const videoEdit = (req, res) => {
-  return res.send("<h1>This will be a video edit page</h1>");
+export const getVideoEdit = async (req, res) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+    const foundVideo = await Video.findById(id);
+    if (!foundVideo) {
+      return res.status(404).render("404", { pageTitle: "Video not found." });
+    }
+
+    return res.render("videos/edit", { pageTitle: "Edit", video: foundVideo });
+  } catch (error) {
+    console.log("getVideoEdit controller error");
+    return res.status(404).render("404", { pageTitle: "Page not found." });
+  }
 };
+
+export const postVideoEdit = async (req, res) => {
+  try {
+    const {
+      params: { id },
+      body: { title, description, hashtags },
+    } = req;
+    const foundVideo = await Video.findById(id);
+    if (!foundVideo) {
+      return res.status(404).render("404", { pageTitle: "Video not found." });
+    }
+    await Video.findByIdAndUpdate(id, {
+      title,
+      description,
+      hashtags: Video.formatHashtags(hashtags),
+    });
+    return res.redirect(`/videos/${id}`);
+  } catch (error) {
+    console.log("postVideoEdit controller error");
+    return res.status(404).render("404", { pageTitle: "Page not found." });
+  }
+};
+
 export const videoDelete = (req, res) => {
   return res.send("<h1>This will be a video delete page</h1>");
 };

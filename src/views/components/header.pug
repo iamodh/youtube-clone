@@ -9,7 +9,7 @@ nav.nav
                 span 홈
         if isLoggedIn
             li.home-menu-item 
-                a(href="#")
+                a(href=`/users/${loggedInUser._id}`)
                     span=loggedInUser.name
             li.home-menu-item 
                 a(href="http://localhost:4000/logout")

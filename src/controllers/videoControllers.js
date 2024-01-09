@@ -1,3 +1,4 @@
+import User from "../models/User";
 import Video from "../models/Video";
 
 export const getVideoUpload = (req, res) => {
@@ -17,6 +18,9 @@ export const postVideoUpload = async (req, res) => {
       hashtags: Video.formatHashtags(hashtags),
       owner: _id,
     });
+    const owner = await User.findById(_id);
+    owner.videos.unshift(newVideo._id);
+    await owner.save();
     return res.redirect("/");
   } catch (error) {
     console.log(error);

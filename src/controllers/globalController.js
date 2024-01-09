@@ -4,10 +4,11 @@ import Video from "../models/Video";
 import bcrypt from "bcrypt";
 
 export const home = async (req, res) => {
-  const videos = await Video.find({}).sort({ createdAt: "desc" });
+  const videos = await Video.find({})
+    .sort({ createdAt: "desc" })
+    .populate("owner");
   return res.render("globals/home", { pageTitle: "Home", videos });
 };
-
 export const getJoin = (req, res) => {
   return res.render("globals/join", { pageTitle: "Join" });
 };
@@ -62,9 +63,12 @@ export const postLogin = async (req, res) => {
   return res.redirect("/");
 };
 
+export const logout = (req, res) => {
+  req.session.loggedInUser = null;
+  req.session.isLoggedIn = false;
+  return res.redirect("/");
+};
+
 export const search = (req, res) => {
   return res.send("<h1>This will be a search page</h1>");
-};
-export const logout = (req, res) => {
-  return res.send("<h1>This will be a logout page</h1>");
 };

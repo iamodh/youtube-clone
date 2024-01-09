@@ -6,7 +6,7 @@ mixin mixinVideo(video)
                 .videoBlock__image
                 .videoBlock__main
                     h4.videoBlock__title #{video.title}
-                    h5 userName 
+                    h5=video.owner.name 
                     .videoBlock__viewDate 
                         if video.meta.views > 1
                             h6.videoBlock__views #{video.meta.views} views 

@@ -6,5 +6,11 @@ block content
   ul
     for hashtag in video.hashtags
       li=hashtag
-  a(href=`/videos/${video.id}/edit`) Edit video &rarr; 
-  a(href=`/videos/${video.id}/delete`) Delete video &rarr; 
+  small Uploaded by 
+    a(href=`/users/${video.owner._id}`)=video.owner.name
+  br
+  small=new Date(video.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
+  br
+  if String(video.owner._id) === String(loggedInUser._id) 
+    a(href=`/videos/${video.id}/edit`) Edit video &rarr; 
+    a(href=`/videos/${video.id}/delete`) Delete video &rarr; 

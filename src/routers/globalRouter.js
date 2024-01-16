@@ -7,13 +7,20 @@ import {
   postLogin,
   logout,
   search,
+  githubAuthStart,
+  githubAuthEnd,
 } from "../controllers/globalController";
+import { privateMiddleware, publicMiddleware } from "../middlewares";
 
-const rootRouter = express.Router();
-rootRouter.get("/", home);
-rootRouter.route("/join").get(getJoin).post(postJoin);
-rootRouter.route("/login").get(getLogin).post(postLogin);
-rootRouter.get("/logout", logout);
-rootRouter.get("/search", search);
+const globalRouter = express.Router();
+globalRouter.get("/", home);
+globalRouter.route("/join").all(publicMiddleware).get(getJoin).post(postJoin);
+globalRouter
+  .route("/login")
+  .all(publicMiddleware)
+  .get(getLogin)
+  .post(postLogin);
+globalRouter.get("/logout", privateMiddleware, logout);
+globalRouter.get("/search", search);
 
-export default rootRouter;
+export default globalRouter;

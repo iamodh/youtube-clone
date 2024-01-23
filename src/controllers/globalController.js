@@ -1,7 +1,10 @@
+import { token } from "morgan";
 import User from "../models/User";
 import Video from "../models/Video";
 
 import bcrypt from "bcrypt";
+import { json } from "express";
+import { create } from "connect-mongo";
 
 export const home = async (req, res) => {
   const videos = await Video.find({})
@@ -44,8 +47,8 @@ export const getLogin = (req, res) => {
 };
 export const postLogin = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) {
+  const foundUser = await User.findOne({ email, githubId: null });
+  if (!foundUser) {
     return res.status(400).render("globals/login", {
       pageTitle: "Login",
       errorMessage: "Email doesn't exist.",
@@ -71,4 +74,92 @@ export const logout = (req, res) => {
 
 export const search = (req, res) => {
   return res.send("<h1>This will be a search page</h1>");
+};
+
+export const githubAuthStart = (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/authorize";
+  const githubAuthorizeParams = {
+    client_id: process.env.GITHUB_CLIEND_ID,
+    allow_signup: true,
+    scope: "read:user user:email",
+  };
+  const urlSearchParams = new URLSearchParams(githubAuthorizeParams).toString();
+  const githubAuthorizeUrl = `${baseUrl}?${urlSearchParams}`;
+  return res.redirect(githubAuthorizeUrl);
+};
+
+export const githubAuthEnd = async (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/access_token";
+  const githubAccessTokenParams = {
+    client_id: process.env.GITHUB_CLIEND_ID,
+    client_secret: process.env.GITHUB_CLIEND_SECRET,
+    code: req.query.code,
+  };
+  const urlSearchParams = new URLSearchParams(
+    githubAccessTokenParams
+  ).toString();
+  const githubAccessTokenUrl = `${baseUrl}?${urlSearchParams}`;
+  try {
+    const tokenJsonData = await (
+      await fetch(githubAccessTokenUrl, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+      })
+    ).json();
+    if ("access_token" in tokenJsonData) {
+      const { access_token } = tokenJsonData;
+      const githubUserJsonData = await (
+        await fetch("https://api.github.com/user", {
+          headers: {
+            Authorization: `token ${access_token}`,
+          },
+        })
+      ).json();
+      const githubEmailJsonData = await (
+        await fetch("https://api.github.com/user/emails", {
+          headers: {
+            Authorization: `token ${access_token}`,
+          },
+        })
+      ).json();
+      const userEmailObject = githubEmailJsonData.find(
+        (email) => email.primary === true && email.verified === true
+      );
+      if (!userEmailObject) {
+        return res.redirect("/login");
+      }
+
+      const foundUser = await User.findOne({ email: userEmailObject.email });
+      if (foundUser) {
+        // user with same email already exists, then login
+        req.session.isLoggedIn = true;
+        req.session.loggedInUser = foundUser;
+        return res.redirect("/");
+      } else {
+        // new user, then create account
+        const createdUser = await User.create({
+          email: userEmailObject.email,
+          name: githubUserJsonData.name,
+          password: "",
+          location: githubUserJsonData.location,
+          githubId: githubUserJsonData.id,
+          avatarUrl: githubUserJsonData.avatar_url,
+        });
+        req.session.isLoggedIn = true;
+        req.session.loggedInUser = createdUser;
+        return res.redirect("/");
+      }
+    } else {
+      // cannot access token
+      return res.redirect("/login");
+    }
+  } catch (error) {
+    console.log("githubAuthEnd error");
+    return res.render("globals/login", {
+      pageTitle: "Login",
+      errorMessage: "깃허브 로그인에 실패했습니다.",
+    });
+  }
 };

@@ -17,6 +17,13 @@ const userSchema = new mongoose.Schema({
   location: {
     type: String,
   },
+  githubId: {
+    type: Number,
+    default: null,
+  },
+  avatarUrl: {
+    type: String,
+  },
   videos: [
     {
       type: mongoose.Schema.Types.ObjectId,

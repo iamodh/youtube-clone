@@ -22,5 +22,7 @@ globalRouter
   .post(postLogin);
 globalRouter.get("/logout", privateMiddleware, logout);
 globalRouter.get("/search", search);
+globalRouter.get("/github/auth/start", publicMiddleware, githubAuthStart);
+globalRouter.get("/github/auth/end", publicMiddleware, githubAuthEnd);
 
 export default globalRouter;

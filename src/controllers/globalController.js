@@ -163,3 +163,54 @@ export const githubAuthEnd = async (req, res) => {
     });
   }
 };
+
+export const kakaoAuthStart = (req, res) => {
+  const baseUrl = "https://kauth.kakao.com/oauth/authorize";
+  const kakaoAuthorizeParams = {
+    response_type: "code",
+    client_id: process.env.KAKAO_REST_API_KEY,
+    redirect_uri: "http://localhost:4000/kakao/auth/end",
+  };
+  const urlSearchParams = new URLSearchParams(kakaoAuthorizeParams).toString();
+  const kakaoAuthorizeUrl = `${baseUrl}?${urlSearchParams}`;
+
+  return res.redirect(kakaoAuthorizeUrl);
+};
+
+export const kakaoAuthEnd = async (req, res) => {
+  const baseUrl = "https://kauth.kakao.com/oauth/token";
+  const kakaoAccessTokenParams = {
+    grant_type: "authorization_code",
+    client_id: process.env.KAKAO_REST_API_KEY,
+    redirect_uri: "http://localhost:4000/kakao/auth/end",
+    code: req.query.code,
+  };
+  const urlSearchParams = new URLSearchParams(
+    kakaoAccessTokenParams
+  ).toString();
+  const kakaoAccessTokenUrl = `${baseUrl}?${urlSearchParams}`;
+
+  const tokenJsonData = await (
+    await fetch(kakaoAccessTokenUrl, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+      },
+    })
+  ).json();
+  console.log(tokenJsonData);
+  if ("access_token" in tokenJsonData) {
+    const { access_token } = tokenJsonData;
+    const kakaoUserJsonData = await (
+      await fetch("https://kapi.kakao.com/v2/user/me", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      })
+    ).json();
+    console.log(kakaoUserJsonData);
+  } else {
+  }
+};

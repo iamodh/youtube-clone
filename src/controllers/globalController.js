@@ -210,7 +210,7 @@ export const kakaoAuthEnd = async (req, res) => {
         },
       })
     ).json();
-    console.log(kakaoUserJsonData);
+    console.log(kakaoUserJsonData.kakao_account);
   } else {
   }
 };

@@ -190,27 +190,55 @@ export const kakaoAuthEnd = async (req, res) => {
   ).toString();
   const kakaoAccessTokenUrl = `${baseUrl}?${urlSearchParams}`;
 
-  const tokenJsonData = await (
-    await fetch(kakaoAccessTokenUrl, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-      },
-    })
-  ).json();
-  console.log(tokenJsonData);
-  if ("access_token" in tokenJsonData) {
-    const { access_token } = tokenJsonData;
-    const kakaoUserJsonData = await (
-      await fetch("https://kapi.kakao.com/v2/user/me", {
-        method: "GET",
+  try {
+    const tokenJsonData = await (
+      await fetch(kakaoAccessTokenUrl, {
+        method: "POST",
         headers: {
-          Authorization: `Bearer ${access_token}`,
-          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+          "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
         },
       })
     ).json();
-    console.log(kakaoUserJsonData.kakao_account);
-  } else {
+    if ("access_token" in tokenJsonData) {
+      const { access_token } = tokenJsonData;
+      const kakaoUserJsonData = await (
+        await fetch("https://kapi.kakao.com/v2/user/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+          },
+        })
+      ).json();
+      const foundUser = await User.findOne({
+        email: `${kakaoUserJsonData.id}@kakao.com`,
+      });
+      if (foundUser) {
+        console.log("Loggin in with found user...");
+        req.session.loggedInUser = foundUser;
+        req.session.isLoggedIn = true;
+        return res.redirect("/");
+      } else {
+        const createdUser = await User.create({
+          email: `${kakaoUserJsonData.id}@kakao.com`,
+          password: "",
+          name: kakaoUserJsonData.kakao_account.profile.nickname,
+          avatarUrl: kakaoUserJsonData.kakao_account.profile.profile_image_url,
+          kakaoId: kakaoUserJsonData.id,
+        });
+        req.session.loggedInUser = createdUser;
+        req.session.isLoggedIn = true;
+        return res.redirect("/");
+      }
+    } else {
+      // cannot access token
+      return res.redirect("/login");
+    }
+  } catch (error) {
+    console.log("kakaoAuthEnd error");
+    return res.render("globals/login", {
+      pageTitle: "Login",
+      errorMessage: "카카오 로그인에 실패했습니다.",
+    });
   }
 };

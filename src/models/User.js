@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
   avatarUrl: {
     type: String,
   },
+  kakaoId: {
+    type: Number,
+    default: null,
+  },
   videos: [
     {
       type: mongoose.Schema.Types.ObjectId,

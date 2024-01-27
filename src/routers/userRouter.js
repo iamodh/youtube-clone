@@ -1,15 +1,25 @@
 import express from "express";
 import {
-  userEdit,
-  userChangePassword,
+  getUserEdit,
+  postUserEdit,
   userProfile,
+  getChangePassword,
+  postChangePassword,
 } from "../controllers/userControllers";
 import { privateMiddleware } from "../middlewares";
 
 const userRouter = express.Router();
 
 userRouter.get("/:id", userProfile);
-userRouter.get("/:id/edit", privateMiddleware, userEdit);
-userRouter.get("/:id/change-password", privateMiddleware, userChangePassword);
+userRouter
+  .route("/:id/edit")
+  .all(privateMiddleware)
+  .get(getUserEdit)
+  .post(postUserEdit);
+userRouter
+  .route("/:id/change-password")
+  .all(privateMiddleware)
+  .get(getChangePassword)
+  .post(postChangePassword);
 
 export default userRouter;

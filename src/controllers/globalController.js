@@ -54,7 +54,7 @@ export const postLogin = async (req, res) => {
       errorMessage: "Email doesn't exist.",
     });
   }
-  const passwordMatch = await bcrypt.compare(password, user.password);
+  const passwordMatch = await bcrypt.compare(password, foundUser.password);
   if (!passwordMatch) {
     return res.status(400).render("globals/login", {
       pageTitle: "Login",
@@ -62,7 +62,7 @@ export const postLogin = async (req, res) => {
     });
   }
   req.session.isLoggedIn = true;
-  req.session.loggedInUser = user;
+  req.session.loggedInUser = foundUser;
   return res.redirect("/");
 };
 

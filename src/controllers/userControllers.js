@@ -6,18 +6,39 @@ export const userProfile = async (req, res) => {
     params: { id },
   } = req;
   const foundUser = await User.findById(id).populate("videos");
-  console.log(foundUser);
   return res.render("users/profile", {
     pageTitle: "Profile",
     user: foundUser,
     videos: foundUser.videos,
   });
 };
-export const userChangePassword = (req, res) => {
-  return res.send("<h1>This will be a user change password page</h1>");
-};
-export const userEdit = (req, res) => {
+export const getUserEdit = (req, res) => {
   return res.render("users/edit", {
     pageTitle: "Edit",
   });
+};
+
+export const postUserEdit = async (req, res) => {
+  const {
+    body: { name, location },
+    session: { loggedInUser },
+  } = req;
+
+  const updatedUser = await User.findByIdAndUpdate(
+    loggedInUser._id,
+    {
+      name,
+      location,
+    },
+    { new: true } // assign updated user to variable
+  );
+  req.session.loggedInUser = updatedUser;
+  return res.redirect(`/users/${loggedInUser._id}`);
+};
+
+export const getChangePassword = (req, res) => {
+  return res.send("<h1>This will be a user change password page</h1>");
+};
+export const postChangePassword = (req, res) => {
+  return res.send("<h1>Password Changed.</h1>");
 };

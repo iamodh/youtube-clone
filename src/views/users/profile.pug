@@ -2,7 +2,7 @@ extends ../layout
 include ../mixins/mixinVideo
 
 block content
-  if user.avatarUrl === undefined 
+  if !user.avatarUrl === undefined 
     img(src="/src/images/default_user.png")
   else 
     img(src=`${user.avatarUrl}`)
@@ -12,6 +12,9 @@ block content
   h4
     |Email 
     h5 - #{user.email}
+  h4
+    |Location 
+    h5 - #{user.location}
   h4 
     |Github
     h5 - #{user.githubId}
@@ -23,7 +26,7 @@ block content
       button 프로필 수정
     if loggedInUser.githubId === null && loggedInUser.kakaoId === null
       a(href=`/users/${loggedInUser._id}/change-password`)
-      button 비밀번호 변경
+        button 비밀번호 변경
   each video in videos 
     +mixinVideo(video)
   else 

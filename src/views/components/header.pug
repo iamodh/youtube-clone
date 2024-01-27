@@ -12,15 +12,15 @@ nav.nav
                 a(href=`/users/${loggedInUser._id}`)
                     span=loggedInUser.name
             li.home-menu-item 
-                a(href="http://localhost:4000/logout")
+                a(href="/logout")
                     span 로그아웃
             li.home-menu-item 
-                a(href="http://localhost:4000/videos/upload")
+                a(href="/videos/upload")
                     span 업로드
         else
             li.home-menu-item 
-                a(href="http://localhost:4000/join")
+                a(href="/join")
                     span 회원가입
             li.home-menu-item 
-                a(href="http://localhost:4000/login")
+                a(href="/login")
                     span 로그인

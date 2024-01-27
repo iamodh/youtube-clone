@@ -6,8 +6,10 @@ export const userProfile = async (req, res) => {
     params: { id },
   } = req;
   const foundUser = await User.findById(id).populate("videos");
+  console.log(foundUser);
   return res.render("users/profile", {
     pageTitle: "Profile",
+    user: foundUser,
     videos: foundUser.videos,
   });
 };
@@ -15,5 +17,7 @@ export const userChangePassword = (req, res) => {
   return res.send("<h1>This will be a user change password page</h1>");
 };
 export const userEdit = (req, res) => {
-  return res.send("<h1>This will be a user edit page</h1>");
+  return res.render("users/edit", {
+    pageTitle: "Edit",
+  });
 };

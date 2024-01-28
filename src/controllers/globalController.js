@@ -54,7 +54,7 @@ export const postLogin = async (req, res) => {
       errorMessage: "Email doesn't exist.",
     });
   }
-  const passwordMatch = await bcrypt.compare(password, foundUser.password);
+  const passwordMatch = bcrypt.compare(password, foundUser.password);
   if (!passwordMatch) {
     return res.status(400).render("globals/login", {
       pageTitle: "Login",

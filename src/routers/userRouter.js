@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   getUserEdit,
   postUserEdit,
@@ -6,7 +7,7 @@ import {
   getChangePassword,
   postChangePassword,
 } from "../controllers/userControllers";
-import { privateMiddleware } from "../middlewares";
+import { avatarMulterMiddleware, privateMiddleware } from "../middlewares";
 
 const userRouter = express.Router();
 
@@ -15,7 +16,7 @@ userRouter
   .route("/:id/edit")
   .all(privateMiddleware)
   .get(getUserEdit)
-  .post(postUserEdit);
+  .post(avatarMulterMiddleware.single("avatar"), postUserEdit);
 userRouter
   .route("/:id/change-password")
   .all(privateMiddleware)

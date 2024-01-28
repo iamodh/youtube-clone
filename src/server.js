@@ -39,6 +39,8 @@ app.use(
 app.use(logger);
 app.use(localsMiddleware);
 
+app.use("/uploads", express.static("uploads"));
+app.use("/images", express.static("src/images"));
 app.use("/", globalRouter);
 app.use("/users", userRouter);
 app.use("/videos", videoRouter);

@@ -1,3 +1,5 @@
+import multer from "multer";
+
 export const localsMiddleware = (req, res, next) => {
   res.locals.loggedInUser = {};
   if (req.session.isLoggedIn) {
@@ -22,3 +24,8 @@ export const privateMiddleware = (req, res, next) => {
     return res.redirect("/login");
   }
 };
+
+export const avatarMulterMiddleware = multer({
+  dest: "uploads/avatars",
+  limits: { FileSize: 20000000 },
+});

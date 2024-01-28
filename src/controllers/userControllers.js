@@ -2,6 +2,7 @@ import User from "../models/User";
 import Video from "../models/Video";
 
 import bcrypt from "bcrypt";
+
 export const userProfile = async (req, res) => {
   const {
     params: { id },
@@ -24,13 +25,17 @@ export const postUserEdit = async (req, res) => {
   const {
     body: { name, location },
     session: { loggedInUser },
+    file,
   } = req;
+
+  console.log(file);
 
   const updatedUser = await User.findByIdAndUpdate(
     loggedInUser._id,
     {
       name,
       location,
+      avatarUrl: file ? `/${file.path}` : avatarUrl,
     },
     { new: true } // assign updated user to variable
   );

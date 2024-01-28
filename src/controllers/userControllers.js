@@ -1,6 +1,7 @@
 import User from "../models/User";
 import Video from "../models/Video";
 
+import bcrypt from "bcrypt";
 export const userProfile = async (req, res) => {
   const {
     params: { id },
@@ -37,9 +38,41 @@ export const postUserEdit = async (req, res) => {
   return res.redirect(`/users/${loggedInUser._id}`);
 };
 
-export const getChangePassword = (req, res) => {
-  return res.send("<h1>This will be a user change password page</h1>");
+export const getChangePassword = async (req, res) => {
+  const { id } = req.params;
+  return res.render(`users/changePassword`, {
+    pageTitle: "Change password",
+  });
 };
-export const postChangePassword = (req, res) => {
-  return res.send("<h1>Password Changed.</h1>");
+export const postChangePassword = async (req, res) => {
+  try {
+    const {
+      session: { loggedInUser },
+      body: { oldPassword, newPassword, newPasswordConfirm },
+    } = req;
+    const foundUser = await User.findById(loggedInUser._id);
+    const oldPasswordMatch = bcrypt.compare(oldPassword, foundUser.password);
+    if (!oldPasswordMatch) {
+      return res.render("users/changePassword", {
+        pageTitle: "Change password",
+        errorMessage: "Old password doesn't match.",
+      });
+    }
+    if (newPassword !== newPasswordConfirm) {
+      return res.render("users/changePassword", {
+        pageTitle: "Change password",
+        errorMessage: "Password confirm doesn't match.",
+      });
+    }
+    const updatedUser = await User.findByIdAndUpdate(loggedInUser._id, {
+      password: newPassword,
+    });
+    return res.redirect(`/users/${loggedInUser._id}`);
+  } catch (error) {
+    console.log("postChangePassword error.");
+    return res.status(400).render("users/changePassword", {
+      pageTitle: "Change password",
+      errorMessage: "Failed to change password",
+    });
+  }
 };

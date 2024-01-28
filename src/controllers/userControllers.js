@@ -7,11 +7,12 @@ export const userProfile = async (req, res) => {
   } = req;
   const foundUser = await User.findById(id).populate("videos");
   return res.render("users/profile", {
-    pageTitle: "Profile",
-    user: foundUser,
+    pageTitle: foundUser.name,
     videos: foundUser.videos,
+    user: foundUser,
   });
 };
+
 export const getUserEdit = (req, res) => {
   return res.render("users/edit", {
     pageTitle: "Edit",

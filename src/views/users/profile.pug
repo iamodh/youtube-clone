@@ -2,7 +2,7 @@ extends ../layout
 include ../mixins/mixinVideo
 
 block content
-  if !user.avatarUrl === undefined 
+  if user.avatarUrl === undefined 
     img(src="/src/images/default_user.png")
   else 
     img(src=`${user.avatarUrl}`)
